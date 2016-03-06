@@ -21,7 +21,7 @@ Instruction::Instruction(string instruction_str) {
 		type_ = ADD;
 	else if (type == "ADDI")
 		type_ = ADDI;
-	else if (type == "SUBI")
+	else if (type_ == "SUBI")
 		type = SUBI;
 	else if (type == "JIF")
 		type_ = JIF;
