@@ -8,4 +8,4 @@
 
 using namespace std;
 
-string GetNthWordFromString(string str, char delim_chr, int word_num);
+std::string GetNthWordFromString(std::string str, char delim_chr, int word_num);

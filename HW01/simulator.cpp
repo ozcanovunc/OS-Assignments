@@ -33,25 +33,33 @@ int Simulator::GetPc() {
     return memory_->GetValue(0);
 }
 
-void Simulator::SetPc(int pc) {
-
-    memory_->SetValue(0, pc);
-}
-
 void Simulator::RunSimulator() {
     
-    int program_counter;
+    int program_counter = GetPc();
+    string pause_debug;
 
     do {
-        program_counter = GetPc();
+    	if (debug_mode_ == 1 || debug_mode_ == 2) {
+    		// Print the current instruction
+    		cout << endl << "--------------------------------------------------" 
+    		<< endl << endl << instruction_set_.at(program_counter).
+    		GetInstructionString() << endl;
+    	}
+
+    	// Execute current instruction
         instruction_set_.at(program_counter).Execute(memory_);
+        program_counter = GetPc();
 
-        // If the last instruction hasn't changed the PC, then increment it
-        if (program_counter == GetPc())
-            SetPc(++program_counter);
+        if ((debug_mode_ == 1 || debug_mode_ == 2) 
+			&& program_counter < instruction_set_.size()) {
+        	// Print the contents of the memory in debug mode
+    		cout << *memory_;
+        }
 
-        if (debug_mode_ == 1)
-            cout << *memory_;
+        if (debug_mode_ == 2 && program_counter < instruction_set_.size()) {
+        	// Pause simulator in debug mode 2
+			getline(cin, pause_debug);
+        }
 
     } while (program_counter < instruction_set_.size());
 }
