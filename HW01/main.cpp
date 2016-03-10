@@ -6,8 +6,8 @@
 int main(int argc, char** argv) {
 
 	if (argc != 4) {
-		cerr << "Usage: ./simulator [PROGRAM] -D [MODE]" << endl;
-		cerr << "Example: ./simulator pr.txt -D 0" << endl;
+		cerr << "Usage: ./Simulate [PROGRAM] -D [MODE]" << endl;
+		cerr << "Example: ./Simulate pr.txt -D 0" << endl;
 		exit(EXIT_FAILURE);
 	}
 

@@ -16,13 +16,15 @@ Instruction::Instruction(string instruction_str) {
 	else if (type == "CPY")
 		type_ = CPY;
 	else if (type == "CPYI")
-		type_ = CPYI;
+		type_ = CPYI;	
+	else if (type == "CPYI2")
+		type_ = CPYI2;
 	else if (type == "ADD")
 		type_ = ADD;
 	else if (type == "ADDI")
 		type_ = ADDI;
-	else if (type_ == "SUBI")
-		type = SUBI;
+	else if (type == "SUBI")
+		type_ = SUBI;
 	else if (type == "JIF")
 		type_ = JIF;
 	else if (type == "HLT")
@@ -79,6 +81,9 @@ bool Instruction::Execute(Memory* mem) {
 			break;
 		case CPYI:
 			is_successful = ExecuteCpyi(mem);
+			break;		
+		case CPYI2:
+			is_successful = ExecuteCpyi2(mem);
 			break;
 		case ADD:
 			is_successful = ExecuteAdd(mem);
@@ -140,6 +145,16 @@ bool Instruction::ExecuteCpyi(Memory* mem) {
 
 	int first_content = mem->GetValue(GetFirstOp());
 	mem->SetValue(GetSecondOp(), mem->GetValue(first_content));
+	return true;
+}
+
+// CPYI2 A1 A2 -> Copy content of A1 to the memory adress indexed by A2
+bool Instruction::ExecuteCpyi2(Memory* mem) {
+
+	int 	first_content = mem->GetValue(GetFirstOp()),
+			second_content = mem->GetValue(GetSecondOp());
+
+	mem->SetValue(second_content, first_content);
 	return true;
 }
 

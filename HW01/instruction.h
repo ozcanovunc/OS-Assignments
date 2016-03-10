@@ -6,7 +6,7 @@ class Instruction {
 
 public:
 	enum InstructionType {
-		UNDEFINED, NOP, SET, CPY, CPYI, ADD, ADDI, SUBI, JIF, HLT
+		UNDEFINED, NOP, SET, CPY, CPYI, CPYI2, ADD, ADDI, SUBI, JIF, HLT
 	};
 	Instruction(std::string instruction_str);
 	InstructionType GetType();
@@ -21,6 +21,7 @@ private:
 	bool ExecuteSet(Memory* mem);
 	bool ExecuteCpy(Memory* mem);
 	bool ExecuteCpyi(Memory* mem);
+	bool ExecuteCpyi2(Memory* mem);
 	bool ExecuteAdd(Memory* mem);
 	bool ExecuteAddi(Memory* mem);
 	bool ExecuteSubi(Memory* mem);
