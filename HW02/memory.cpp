@@ -2,7 +2,7 @@
 #include "memory.h"
 
 void Memory::AllocMemoryForNewProcess(string file_name, int& base, int& limit) {
-	
+
     ifstream file(file_name.c_str());
     string line;
     int mem_address = -1;

@@ -250,14 +250,20 @@ bool Instruction::ExecuteHlt(Memory* mem, int base_reg) {
 	return false;
 }
 
+// CALL FORK -> Works like the fork system call of UNIX systems
 bool Instruction::ExecuteCallFork(Memory* mem, int base_reg) {
 
 }
 
+// CALL PRN A ->Prints the contents of memory address A to the console
 bool Instruction::ExecuteCallPrn(Memory* mem, int base_reg) {
 
+	int first_content = mem->GetValue(GetFirstOp() + base_reg);
+	cout << first_content << endl;
+	return true;
 }
 
+// CALL EXEC A -> Loads the program specified in the file name
 bool Instruction::ExecuteCallExec(Memory* mem, int base_reg) {
 
 }

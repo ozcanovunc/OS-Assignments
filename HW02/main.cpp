@@ -22,7 +22,9 @@ int main(int argc, char** argv) {
 
 
 	Memory* m = new Memory();
-	Process* p = new Process("sort.txt", m, 1);
+	Process* p2 = new Process("test.txt", m, 1);
+	Process* p = new Process("test2.txt", m, 1);
+	cout  << *m;
 	bool c = true;
 
 	while (c) {

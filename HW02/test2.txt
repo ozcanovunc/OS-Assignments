@@ -1,7 +1,7 @@
 Begin Data Section
 0 0       # program counter
 1 0       # stack pointer
-2 0
+2 160
 3 0
 4 0
 5 0
@@ -161,7 +161,7 @@ Begin Data Section
 159 82
 End Data Section
 Begin Instruction Section
-11 SET 10 32
+11 SET 12 32
 12 SET 20 53
 13 ADD 30 53
 14 ADDI 32 53
