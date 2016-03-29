@@ -16,7 +16,7 @@ public:
 	int GetBaseReg();
 	int GetLimitReg();
 	int GetPc(Memory* mem);
-	bool ExecuteCurrentInstruction(Memory* mem);
+	std::string ExecuteCurrentInstruction(Memory* mem);
 	friend std::ostream& operator<<(std::ostream& os, const Process& process);
 
 private:

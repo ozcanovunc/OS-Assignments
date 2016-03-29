@@ -95,60 +95,60 @@ string Instruction::GetInstructionString() {
 }
 
 // TODO: Throw an exception "segmentation fault"
-bool Instruction::Execute(Memory* mem, int base_reg) {
+string Instruction::Execute(Memory* mem, int base_reg) {
 
 	// Program counter values	
 	int 	former_pc = mem->GetValue(base_reg), 
 			current_pc;
 
-	bool is_successful = false;
+	string result = "";
 	
 	switch (GetType()) {
 
 		case UNDEFINED:
-			is_successful = ExecuteUndefined(mem, base_reg);
+			result = ExecuteUndefined(mem, base_reg);
 			break;
 		case NOP:
-			is_successful = ExecuteNop(mem, base_reg);
+			result = ExecuteNop(mem, base_reg);
 			break;
 		case SET:
-			is_successful = ExecuteSet(mem, base_reg);
+			result = ExecuteSet(mem, base_reg);
 			break;
 		case CPY:
-			is_successful = ExecuteCpy(mem, base_reg);
+			result = ExecuteCpy(mem, base_reg);
 			break;
 		case CPYI:
-			is_successful = ExecuteCpyi(mem, base_reg);
+			result = ExecuteCpyi(mem, base_reg);
 			break;		
 		case CPYI2:
-			is_successful = ExecuteCpyi2(mem, base_reg);
+			result = ExecuteCpyi2(mem, base_reg);
 			break;
 		case ADD:
-			is_successful = ExecuteAdd(mem, base_reg);
+			result = ExecuteAdd(mem, base_reg);
 			break;
 		case ADDI:
-			is_successful = ExecuteAddi(mem, base_reg);
+			result = ExecuteAddi(mem, base_reg);
 			break;
 		case SUBI:
-			is_successful = ExecuteSubi(mem, base_reg);
+			result = ExecuteSubi(mem, base_reg);
 			break;
 		case JIF:
-			is_successful = ExecuteJif(mem, base_reg);
+			result = ExecuteJif(mem, base_reg);
 			break;
 		case HLT:
-			is_successful = ExecuteHlt(mem, base_reg);
+			result = ExecuteHlt(mem, base_reg);
 			break;
 		case FORK:
-			is_successful = ExecuteCallFork(mem, base_reg);
+			result = ExecuteCallFork(mem, base_reg);
 			break;
 		case PRN:
-			is_successful = ExecuteCallPrn(mem, base_reg);
+			result = ExecuteCallPrn(mem, base_reg);
 			break;
 		case EXEC:
-			is_successful = ExecuteCallExec(mem, base_reg);
+			result = ExecuteCallExec(mem, base_reg);
 			break;
 		default:
-			is_successful = ExecuteUndefined(mem, base_reg);
+			result = ExecuteUndefined(mem, base_reg);
 			break;
 	}
 
@@ -159,111 +159,124 @@ bool Instruction::Execute(Memory* mem, int base_reg) {
 	if (former_pc == current_pc)
 		mem->SetValue(base_reg, current_pc + 1);
 
-	return is_successful;
+	return result;
 }
 
-bool Instruction::ExecuteUndefined(Memory* mem, int base_reg) {
+string Instruction::ExecuteUndefined(Memory* mem, int base_reg) {
 
-	return false;
+	return "UNDEFINED";
 }
 
-bool Instruction::ExecuteNop(Memory* mem, int base_reg) {
+string Instruction::ExecuteNop(Memory* mem, int base_reg) {
 
-	return true;
+	return "NOP";
 }
 
 // SET B A -> Set the Ath memory location with number B
-bool Instruction::ExecuteSet(Memory* mem, int base_reg) {
+string Instruction::ExecuteSet(Memory* mem, int base_reg) {
 
 	mem->SetValue(GetSecondOp() + base_reg, GetFirstOp());
-	return true;
+	return "SET";
 }
 
 // CPY A1 A2 -> Copy the content of memory location A1 to memory A2
-bool Instruction::ExecuteCpy(Memory* mem, int base_reg) {
+string Instruction::ExecuteCpy(Memory* mem, int base_reg) {
 
 	int first_content = mem->GetValue(GetFirstOp() + base_reg);
 	mem->SetValue(GetSecondOp() + base_reg, first_content);
-	return true;
+	return "CPY";
 }
 
 // CPYI A1 A2 -> Copy contents of pointed by A1 to memory location A2
-bool Instruction::ExecuteCpyi(Memory* mem, int base_reg) {
+string Instruction::ExecuteCpyi(Memory* mem, int base_reg) {
 
 	int first_content = mem->GetValue(GetFirstOp() + base_reg);
 	mem->SetValue(GetSecondOp() + base_reg, mem->GetValue(first_content));
-	return true;
+	return "CPYI";
 }
 
 // CPYI2 A1 A2 -> Copy content of A1 to the memory adress indexed by A2
-bool Instruction::ExecuteCpyi2(Memory* mem, int base_reg) {
+string Instruction::ExecuteCpyi2(Memory* mem, int base_reg) {
 
 	int 	first_content = mem->GetValue(GetFirstOp() + base_reg),
 			second_content = mem->GetValue(GetSecondOp() + base_reg);
 
 	mem->SetValue(second_content + base_reg, first_content);
-	return true;
+	return "CPYI";
 }
 
 // ADD B A -> Add number B to memory location A
-bool Instruction::ExecuteAdd(Memory* mem, int base_reg) {
+string Instruction::ExecuteAdd(Memory* mem, int base_reg) {
 
 	int second_content = mem->GetValue(GetSecondOp() + base_reg);
 	mem->SetValue(GetSecondOp() + base_reg, GetFirstOp() + second_content);
-	return true;
+	return "ADD";
 }
 
 // ADDI A1 A2 -> Add the contents of memory address A1 to address A2
-bool Instruction::ExecuteAddi(Memory* mem, int base_reg) {
+string Instruction::ExecuteAddi(Memory* mem, int base_reg) {
 	
 	int 	first_content = mem->GetValue(GetFirstOp() + base_reg),
 			second_content = mem->GetValue(GetSecondOp() + base_reg);
 
 	mem->SetValue(GetSecondOp() + base_reg, first_content + second_content);
-	return true;
+	return "ADDI";
 }
 
 // SUBI A1 A2 -> Subtract the contents of A2 from A1 put it in A2
-bool Instruction::ExecuteSubi(Memory* mem, int base_reg) {
+string Instruction::ExecuteSubi(Memory* mem, int base_reg) {
 
 	int 	first_content = mem->GetValue(GetFirstOp() + base_reg),
 			second_content = mem->GetValue(GetSecondOp() + base_reg),
 			result = first_content - second_content;
 
 	mem->SetValue(GetSecondOp() + base_reg, result);
-	return true;
+	return "SUBI";
 }
 
 // JIF A C -> Set PC with C if memory location A content is less than or equal to 0
-bool Instruction::ExecuteJif(Memory* mem, int base_reg) {
+string Instruction::ExecuteJif(Memory* mem, int base_reg) {
 
 	int first_content = mem->GetValue(GetFirstOp() + base_reg);
 	if (first_content <= 0)
 		mem->SetValue(base_reg, GetSecondOp()); // Set PC (Memory location 0)
-	return true;
+	return "JIF";
 }
 
 // HLT -> Shuts down the CPU
-bool Instruction::ExecuteHlt(Memory* mem, int base_reg) {
+string Instruction::ExecuteHlt(Memory* mem, int base_reg) {
 	
 	cout << *mem << endl;
-	return false;
+	return "HLT";
 }
 
 // CALL FORK -> Works like the fork system call of UNIX systems
-bool Instruction::ExecuteCallFork(Memory* mem, int base_reg) {
+string Instruction::ExecuteCallFork(Memory* mem, int base_reg) {
 
+	return "FORK";
 }
 
 // CALL PRN A ->Prints the contents of memory address A to the console
-bool Instruction::ExecuteCallPrn(Memory* mem, int base_reg) {
+string Instruction::ExecuteCallPrn(Memory* mem, int base_reg) {
 
 	int first_content = mem->GetValue(GetFirstOp() + base_reg);
 	cout << first_content << endl;
-	return true;
+	return "PRN";
 }
 
 // CALL EXEC A -> Loads the program specified in the file name
-bool Instruction::ExecuteCallExec(Memory* mem, int base_reg) {
+string Instruction::ExecuteCallExec(Memory* mem, int base_reg) {
+	
+	int 	address = GetFirstOp() + base_reg,
+			first_content;
+	char 	c;
+	string 	file_name;
 
+	do {
+		first_content = mem->GetValue(address++);
+		c = (char)first_content;
+		file_name.append(1, c);
+	} while (c);
+
+	return file_name;
 }

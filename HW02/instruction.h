@@ -15,23 +15,23 @@ public:
 	int GetSecondOp();
 	std::string GetComment();
 	std::string GetInstructionString();
-	bool Execute(Memory* mem, int base_reg);
+	std::string Execute(Memory* mem, int base_reg);
 	
 private:	
-	bool ExecuteUndefined(Memory* mem, int base_reg);
-	bool ExecuteNop(Memory* mem, int base_reg);
-	bool ExecuteSet(Memory* mem, int base_reg);
-	bool ExecuteCpy(Memory* mem, int base_reg);
-	bool ExecuteCpyi(Memory* mem, int base_reg);
-	bool ExecuteCpyi2(Memory* mem, int base_reg);
-	bool ExecuteAdd(Memory* mem, int base_reg);
-	bool ExecuteAddi(Memory* mem, int base_reg);
-	bool ExecuteSubi(Memory* mem, int base_reg);
-	bool ExecuteJif(Memory* mem, int base_reg);
-	bool ExecuteHlt(Memory* mem, int base_reg);
-	bool ExecuteCallFork(Memory* mem, int base_reg);
-	bool ExecuteCallPrn(Memory* mem, int base_reg);
-	bool ExecuteCallExec(Memory* mem, int base_reg);
+	std::string ExecuteUndefined(Memory* mem, int base_reg);
+	std::string ExecuteNop(Memory* mem, int base_reg);
+	std::string ExecuteSet(Memory* mem, int base_reg);
+	std::string ExecuteCpy(Memory* mem, int base_reg);
+	std::string ExecuteCpyi(Memory* mem, int base_reg);
+	std::string ExecuteCpyi2(Memory* mem, int base_reg);
+	std::string ExecuteAdd(Memory* mem, int base_reg);
+	std::string ExecuteAddi(Memory* mem, int base_reg);
+	std::string ExecuteSubi(Memory* mem, int base_reg);
+	std::string ExecuteJif(Memory* mem, int base_reg);
+	std::string ExecuteHlt(Memory* mem, int base_reg);
+	std::string ExecuteCallFork(Memory* mem, int base_reg);
+	std::string ExecuteCallPrn(Memory* mem, int base_reg);
+	std::string ExecuteCallExec(Memory* mem, int base_reg);
 	InstructionType type_;
 	int first_op_;
 	int second_op_;

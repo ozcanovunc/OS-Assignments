@@ -57,7 +57,7 @@ int Process::GetPc(Memory* mem) {
 	return mem->GetValue(base_reg_);
 }
 
-bool Process::ExecuteCurrentInstruction(Memory* mem) {
+string Process::ExecuteCurrentInstruction(Memory* mem) {
 	return instruction_set_.at(GetPc(mem)).Execute(mem, base_reg_);
 }
 

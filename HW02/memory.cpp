@@ -4,8 +4,9 @@
 void Memory::AllocMemoryForNewProcess(string file_name, int& base, int& limit) {
 
     ifstream file(file_name.c_str());
-    string line;
+    string line, content;
     int mem_address = -1;
+    int value;
 
     while (getline(file, line))
     {
@@ -15,8 +16,16 @@ void Memory::AllocMemoryForNewProcess(string file_name, int& base, int& limit) {
     	    	line.find("End Data Section") == string::npos) {
 
     	    	++mem_address;
+                content = GetNthWordFromString(line, ' ', 2);
 
-    	    	int value = atoi(GetNthWordFromString(line, ' ', 2).c_str());
+                // Decide whether content denotes a character or not
+                if (content.c_str()[0] == '\'') {
+                    value = (int)content.c_str()[1];
+                }
+    	    	else {
+                    value = atoi(content.c_str());
+                }
+
     	    	mem_content_.push_back(value);
 
     	    	// Set base and limit registers

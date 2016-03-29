@@ -39,9 +39,9 @@ Begin Data Section
 37 0
 38 0
 39 0     # you may use locations 25 to 59 as registers
-40 0
-41 0
-42 0
+40 'a'
+41 'b'
+42 'c'
 43 0
 44 0
 45 0
@@ -165,5 +165,6 @@ Begin Instruction Section
 12 SET 20 53
 13 ADD 30 53
 14 ADDI 32 53
+15 CALL EXEC 40 
 20 HLT
 End Instruction Section

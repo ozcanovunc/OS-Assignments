@@ -24,11 +24,11 @@ int main(int argc, char** argv) {
 	Memory* m = new Memory();
 	Process* p2 = new Process("test.txt", m, 1);
 	Process* p = new Process("test2.txt", m, 1);
-	cout  << *m;
-	bool c = true;
 
-	while (c) {
-		c = p->ExecuteCurrentInstruction(m);
+	string s = "";
+
+	while (s.compare("HLT")) {
+		s = p->ExecuteCurrentInstruction(m);
 	}
 
 
