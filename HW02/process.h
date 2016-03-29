@@ -3,19 +3,29 @@
 #include "instruction.h"
 #include "memory.h"
 
+typedef enum {
+	READY, BLOCKED, RUNNING, FINISHED
+} ProcessState;
+
 class Process {
 
 public:
-	enum ProcessState {
-		READY, BLOCKED, RUNNING, FINISHED
-	};
 	Process(std::string file_name, Memory* mem, int starting_time, int ppid = -1);
-	~Process();
+
+	int GetPc(Memory* mem);
+	int GetPid();
+	string GetName();
+
 	ProcessState GetState();
-	void SetState(ProcessState state);
 	int GetBaseReg();
 	int GetLimitReg();
-	int GetPc(Memory* mem);
+	int GetExecutionTime();
+
+	void SetState(ProcessState state);
+	void SetBaseReg(int base_reg);
+	void SetLimitReg(int limit_reg);
+	void SetExecutionTime(int exe_time);
+
 	std::string ExecuteCurrentInstruction(Memory* mem);
 	friend std::ostream& operator<<(std::ostream& os, const Process& process);
 

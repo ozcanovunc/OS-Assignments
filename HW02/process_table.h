@@ -6,6 +6,7 @@ class ProcessTable {
 
 public:
 	bool IsEmpty();
+	int GetSize();
 	Process* PopProcess();
 	void PushProcess(Process* process);
 

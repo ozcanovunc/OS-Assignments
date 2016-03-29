@@ -202,7 +202,7 @@ string Instruction::ExecuteCpyi2(Memory* mem, int base_reg) {
 			second_content = mem->GetValue(GetSecondOp() + base_reg);
 
 	mem->SetValue(second_content + base_reg, first_content);
-	return "CPYI";
+	return "CPYI2";
 }
 
 // ADD B A -> Add number B to memory location A
@@ -246,7 +246,6 @@ string Instruction::ExecuteJif(Memory* mem, int base_reg) {
 // HLT -> Shuts down the CPU
 string Instruction::ExecuteHlt(Memory* mem, int base_reg) {
 	
-	cout << *mem << endl;
 	return "HLT";
 }
 

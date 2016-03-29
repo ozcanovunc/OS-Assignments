@@ -6,7 +6,9 @@
 #include <algorithm>
 #include <cstdlib>
 #include <queue>
+#include <vector>
 
 using namespace std;
 
 std::string GetNthWordFromString(std::string str, char delim_chr, int word_num);
+int WaitRandomBetween(int min_ticks, int max_ticks);

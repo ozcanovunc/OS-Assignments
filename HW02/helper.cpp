@@ -22,3 +22,11 @@ string GetNthWordFromString(string str, char delim_chr, int word_num) {
 
 	return result;
 }
+
+int WaitRandomBetween(int min_ticks, int max_ticks) {
+
+	int random_ticks = min_ticks + rand() % (max_ticks - min_ticks);
+	for (int i = 0; i < random_ticks; ++i)
+	;
+	return random_ticks;
+}
