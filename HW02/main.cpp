@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
 		int ticks_spent = 0;
 
 		// Round robin with a quantum of 5 ticks
-		while (curr_instruction.compare("HLT") && ticks_spent < 5) {
+		while (curr_instruction.compare("HLT") && ticks_spent < 5 - 1) {
 
 			curr_instruction = curr_process->ExecuteCurrentInstruction(mem);
 
@@ -131,8 +131,12 @@ int main(int argc, char** argv) {
 			last_process = curr_process->GetName();
 			last_process_pid = curr_process->GetPid();
 
-			if (debug_mode == 0)
+			if (debug_mode == 0) {
 				cout << *mem << endl;
+			}
+			if (debug_mode == 3) {
+				cout << "Process halted\n" << *curr_process << endl;
+			}
 
 			delete curr_process;
 		}
