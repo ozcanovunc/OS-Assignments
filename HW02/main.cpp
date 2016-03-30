@@ -66,11 +66,13 @@ int main(int argc, char** argv) {
 				cout << *mem << endl;
 			}
 
-			for (type : instruction_types) {
+			for (int i = 0; i < 13; ++i) {
+				string type = instruction_types[i];
 				// If it's not one of our types, it must be EXEC instruction
 				// Because it returns the program name to be executed
-				if (curr_instruction.compare(type) == 0)
+				if (curr_instruction.compare(type) == 0) {
 					found = true;
+				}
 			}
 
 			// Current instruction is a system call, spend some ticks between 5 - 10
@@ -135,6 +137,6 @@ int main(int argc, char** argv) {
 			delete curr_process;
 		}
 	} // for
-	
+
 	return EXIT_SUCCESS;
 }
