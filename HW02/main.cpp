@@ -20,6 +20,7 @@ int main(int argc, char** argv) {
 	Memory* mem = new Memory();
 	ProcessTable* process_table = new ProcessTable();
 	Process* curr_process;
+	int last_process_pid = -1;
 	string last_process = "INIT";
 	int debug_mode = atoi(argv[3]);
 
@@ -38,10 +39,10 @@ int main(int argc, char** argv) {
 			curr_process = process_table->PopProcess();
 
 			// Process switch occured - Debug mode: 2
-			if (debug_mode == 2 && last_process.compare(curr_process->GetName())) {
-				cout << "CPU Tick: " << ticks << " /// Switched from \"" 
-				<< last_process << "\" to \"" << curr_process->GetName() 
-				<< "\"" << endl;
+			if (debug_mode == 2 && last_process_pid != curr_process->GetPid()) {
+				cout << "CPU Tick: " << ticks << " /// Switched from PID: " 
+				<< last_process_pid << " " << last_process << " /// to PID: " 
+				<< curr_process->GetPid() << " " << curr_process->GetName() << endl; 
 			}
 		}
 		// No process to execute left
@@ -73,18 +74,28 @@ int main(int argc, char** argv) {
 			}
 
 			// Current instruction is a system call, spend some ticks between 5 - 10
-			// FORK
-			/*
+			// FORK		
 			if (found && curr_instruction.compare("FORK") == 0) {
+
 				ticks_spent += WaitRandomBetween(5, 10);
+
+				Process* p = curr_process->Fork(mem, ticks + ticks_spent);
+				process_table->PushProcess(p);
+
+				if (debug_mode == 3) {
+					cout << "New process created\n" << *p << endl;
+				}
 			}
-			*/
+			
 			// PRN
 			if (found && curr_instruction.compare("PRN") == 0) {
+
 				ticks_spent += WaitRandomBetween(5, 10);
 			}
+
 			// EXEC
 			if (!found) {
+
 				ticks_spent += WaitRandomBetween(5, 10);
 
 				// Create new process
@@ -110,10 +121,13 @@ int main(int argc, char** argv) {
 			curr_process->SetState(READY);
 			// Push the current process to the end of the queue
 			process_table->PushProcess(curr_process);
+
 			last_process = curr_process->GetName();
+			last_process_pid = curr_process->GetPid();
 		}
 		else {
 			last_process = curr_process->GetName();
+			last_process_pid = curr_process->GetPid();
 
 			if (debug_mode == 0)
 				cout << *mem << endl;
@@ -121,6 +135,6 @@ int main(int argc, char** argv) {
 			delete curr_process;
 		}
 	} // for
-
+	
 	return EXIT_SUCCESS;
 }

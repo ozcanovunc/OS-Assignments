@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <queue>
 #include <vector>
+#include <exception>
 
 using namespace std;
 

@@ -15,23 +15,23 @@ public:
 	int GetSecondOp();
 	std::string GetComment();
 	std::string GetInstructionString();
-	std::string Execute(Memory* mem, int base_reg);
+	std::string Execute(Memory* mem, int base_reg, int limit_reg);
 	
 private:	
-	std::string ExecuteUndefined(Memory* mem, int base_reg);
-	std::string ExecuteNop(Memory* mem, int base_reg);
-	std::string ExecuteSet(Memory* mem, int base_reg);
-	std::string ExecuteCpy(Memory* mem, int base_reg);
-	std::string ExecuteCpyi(Memory* mem, int base_reg);
-	std::string ExecuteCpyi2(Memory* mem, int base_reg);
-	std::string ExecuteAdd(Memory* mem, int base_reg);
-	std::string ExecuteAddi(Memory* mem, int base_reg);
-	std::string ExecuteSubi(Memory* mem, int base_reg);
-	std::string ExecuteJif(Memory* mem, int base_reg);
-	std::string ExecuteHlt(Memory* mem, int base_reg);
-	std::string ExecuteCallFork(Memory* mem, int base_reg);
-	std::string ExecuteCallPrn(Memory* mem, int base_reg);
-	std::string ExecuteCallExec(Memory* mem, int base_reg);
+	std::string ExecuteUndefined(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteNop(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteSet(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteCpy(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteCpyi(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteCpyi2(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteAdd(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteAddi(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteSubi(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteJif(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteHlt(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteCallFork(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteCallPrn(Memory* mem, int base_reg, int limit_reg);
+	std::string ExecuteCallExec(Memory* mem, int base_reg, int limit_reg);
 	InstructionType type_;
 	int first_op_;
 	int second_op_;

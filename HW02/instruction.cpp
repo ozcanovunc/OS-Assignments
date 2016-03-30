@@ -95,7 +95,7 @@ string Instruction::GetInstructionString() {
 }
 
 // TODO: Throw an exception "segmentation fault"
-string Instruction::Execute(Memory* mem, int base_reg) {
+string Instruction::Execute(Memory* mem, int base_reg, int limit_reg) {
 
 	// Program counter values	
 	int 	former_pc = mem->GetValue(base_reg), 
@@ -106,49 +106,49 @@ string Instruction::Execute(Memory* mem, int base_reg) {
 	switch (GetType()) {
 
 		case UNDEFINED:
-			result = ExecuteUndefined(mem, base_reg);
+			result = ExecuteUndefined(mem, base_reg, limit_reg);
 			break;
 		case NOP:
-			result = ExecuteNop(mem, base_reg);
+			result = ExecuteNop(mem, base_reg, limit_reg);
 			break;
 		case SET:
-			result = ExecuteSet(mem, base_reg);
+			result = ExecuteSet(mem, base_reg, limit_reg);
 			break;
 		case CPY:
-			result = ExecuteCpy(mem, base_reg);
+			result = ExecuteCpy(mem, base_reg, limit_reg);
 			break;
 		case CPYI:
-			result = ExecuteCpyi(mem, base_reg);
+			result = ExecuteCpyi(mem, base_reg, limit_reg);
 			break;		
 		case CPYI2:
-			result = ExecuteCpyi2(mem, base_reg);
+			result = ExecuteCpyi2(mem, base_reg, limit_reg);
 			break;
 		case ADD:
-			result = ExecuteAdd(mem, base_reg);
+			result = ExecuteAdd(mem, base_reg, limit_reg);
 			break;
 		case ADDI:
-			result = ExecuteAddi(mem, base_reg);
+			result = ExecuteAddi(mem, base_reg, limit_reg);
 			break;
 		case SUBI:
-			result = ExecuteSubi(mem, base_reg);
+			result = ExecuteSubi(mem, base_reg, limit_reg);
 			break;
 		case JIF:
-			result = ExecuteJif(mem, base_reg);
+			result = ExecuteJif(mem, base_reg, limit_reg);
 			break;
 		case HLT:
-			result = ExecuteHlt(mem, base_reg);
+			result = ExecuteHlt(mem, base_reg, limit_reg);
 			break;
 		case FORK:
-			result = ExecuteCallFork(mem, base_reg);
+			result = ExecuteCallFork(mem, base_reg, limit_reg);
 			break;
 		case PRN:
-			result = ExecuteCallPrn(mem, base_reg);
+			result = ExecuteCallPrn(mem, base_reg, limit_reg);
 			break;
 		case EXEC:
-			result = ExecuteCallExec(mem, base_reg);
+			result = ExecuteCallExec(mem, base_reg, limit_reg);
 			break;
 		default:
-			result = ExecuteUndefined(mem, base_reg);
+			result = ExecuteUndefined(mem, base_reg, limit_reg);
 			break;
 	}
 
@@ -162,25 +162,38 @@ string Instruction::Execute(Memory* mem, int base_reg) {
 	return result;
 }
 
-string Instruction::ExecuteUndefined(Memory* mem, int base_reg) {
+string Instruction::ExecuteUndefined(Memory* mem, int base_reg, int limit_reg) {
 
 	return "UNDEFINED";
 }
 
-string Instruction::ExecuteNop(Memory* mem, int base_reg) {
+string Instruction::ExecuteNop(Memory* mem, int base_reg, int limit_reg) {
 
 	return "NOP";
 }
 
 // SET B A -> Set the Ath memory location with number B
-string Instruction::ExecuteSet(Memory* mem, int base_reg) {
+string Instruction::ExecuteSet(Memory* mem, int base_reg, int limit_reg) {
+
+	if (GetSecondOp() + base_reg > limit_reg) {
+		cout << "Segmentation error occured when executing instruction" 
+		<< endl << "\t\t" << instruction_ << endl << endl;
+		throw exception();
+	}
 
 	mem->SetValue(GetSecondOp() + base_reg, GetFirstOp());
 	return "SET";
 }
 
 // CPY A1 A2 -> Copy the content of memory location A1 to memory A2
-string Instruction::ExecuteCpy(Memory* mem, int base_reg) {
+string Instruction::ExecuteCpy(Memory* mem, int base_reg, int limit_reg) {
+
+	if (GetFirstOp() + base_reg > limit_reg || 
+		GetSecondOp() + base_reg > limit_reg) {
+		cout << "Segmentation error occured when executing instruction" 
+		<< endl << "\t\t" << instruction_ << endl << endl;
+		throw exception();
+	}
 
 	int first_content = mem->GetValue(GetFirstOp() + base_reg);
 	mem->SetValue(GetSecondOp() + base_reg, first_content);
@@ -188,7 +201,14 @@ string Instruction::ExecuteCpy(Memory* mem, int base_reg) {
 }
 
 // CPYI A1 A2 -> Copy contents of pointed by A1 to memory location A2
-string Instruction::ExecuteCpyi(Memory* mem, int base_reg) {
+string Instruction::ExecuteCpyi(Memory* mem, int base_reg, int limit_reg) {
+
+	if (GetFirstOp() + base_reg > limit_reg || 
+		GetSecondOp() + base_reg > limit_reg) {
+		cout << "Segmentation error occured when executing instruction" 
+		<< endl << "\t\t" << instruction_ << endl << endl;
+		throw exception();
+	}
 
 	int first_content = mem->GetValue(GetFirstOp() + base_reg);
 	mem->SetValue(GetSecondOp() + base_reg, mem->GetValue(first_content));
@@ -196,7 +216,15 @@ string Instruction::ExecuteCpyi(Memory* mem, int base_reg) {
 }
 
 // CPYI2 A1 A2 -> Copy content of A1 to the memory adress indexed by A2
-string Instruction::ExecuteCpyi2(Memory* mem, int base_reg) {
+string Instruction::ExecuteCpyi2(Memory* mem, int base_reg, int limit_reg) {
+
+	if (GetFirstOp() + base_reg > limit_reg || 
+		GetSecondOp() + base_reg > limit_reg ||
+		mem->GetValue(GetSecondOp() + base_reg) + base_reg > limit_reg) {
+		cout << "Segmentation error occured when executing instruction" 
+		<< endl << "\t\t" << instruction_ << endl << endl;
+		throw exception();
+	}
 
 	int 	first_content = mem->GetValue(GetFirstOp() + base_reg),
 			second_content = mem->GetValue(GetSecondOp() + base_reg);
@@ -206,7 +234,13 @@ string Instruction::ExecuteCpyi2(Memory* mem, int base_reg) {
 }
 
 // ADD B A -> Add number B to memory location A
-string Instruction::ExecuteAdd(Memory* mem, int base_reg) {
+string Instruction::ExecuteAdd(Memory* mem, int base_reg, int limit_reg) {
+
+	if (GetSecondOp() + base_reg > limit_reg) {
+		cout << "Segmentation error occured when executing instruction" 
+		<< endl << "\t\t" << instruction_ << endl << endl;
+		throw exception();
+	}
 
 	int second_content = mem->GetValue(GetSecondOp() + base_reg);
 	mem->SetValue(GetSecondOp() + base_reg, GetFirstOp() + second_content);
@@ -214,8 +248,15 @@ string Instruction::ExecuteAdd(Memory* mem, int base_reg) {
 }
 
 // ADDI A1 A2 -> Add the contents of memory address A1 to address A2
-string Instruction::ExecuteAddi(Memory* mem, int base_reg) {
-	
+string Instruction::ExecuteAddi(Memory* mem, int base_reg, int limit_reg) {
+
+	if (GetFirstOp() + base_reg > limit_reg || 
+		GetSecondOp() + base_reg > limit_reg) {
+		cout << "Segmentation error occured when executing instruction" 
+		<< endl << "\t\t" << instruction_ << endl << endl;
+		throw exception();
+	}
+
 	int 	first_content = mem->GetValue(GetFirstOp() + base_reg),
 			second_content = mem->GetValue(GetSecondOp() + base_reg);
 
@@ -224,7 +265,14 @@ string Instruction::ExecuteAddi(Memory* mem, int base_reg) {
 }
 
 // SUBI A1 A2 -> Subtract the contents of A2 from A1 put it in A2
-string Instruction::ExecuteSubi(Memory* mem, int base_reg) {
+string Instruction::ExecuteSubi(Memory* mem, int base_reg, int limit_reg) {
+
+	if (GetFirstOp() + base_reg > limit_reg || 
+		GetSecondOp() + base_reg > limit_reg) {
+		cout << "Segmentation error occured when executing instruction" 
+		<< endl << "\t\t" << instruction_ << endl << endl;
+		throw exception();
+	}
 
 	int 	first_content = mem->GetValue(GetFirstOp() + base_reg),
 			second_content = mem->GetValue(GetSecondOp() + base_reg),
@@ -235,7 +283,13 @@ string Instruction::ExecuteSubi(Memory* mem, int base_reg) {
 }
 
 // JIF A C -> Set PC with C if memory location A content is less than or equal to 0
-string Instruction::ExecuteJif(Memory* mem, int base_reg) {
+string Instruction::ExecuteJif(Memory* mem, int base_reg, int limit_reg) {
+
+	if (GetFirstOp() + base_reg > limit_reg) {
+		cout << "Segmentation error occured when executing instruction" 
+		<< endl << "\t\t" << instruction_ << endl << endl;
+		throw exception();
+	}
 
 	int first_content = mem->GetValue(GetFirstOp() + base_reg);
 	if (first_content <= 0)
@@ -244,19 +298,25 @@ string Instruction::ExecuteJif(Memory* mem, int base_reg) {
 }
 
 // HLT -> Shuts down the CPU
-string Instruction::ExecuteHlt(Memory* mem, int base_reg) {
+string Instruction::ExecuteHlt(Memory* mem, int base_reg, int limit_reg) {
 	
 	return "HLT";
 }
 
 // CALL FORK -> Works like the fork system call of UNIX systems
-string Instruction::ExecuteCallFork(Memory* mem, int base_reg) {
+string Instruction::ExecuteCallFork(Memory* mem, int base_reg, int limit_reg) {
 
 	return "FORK";
 }
 
 // CALL PRN A ->Prints the contents of memory address A to the console
-string Instruction::ExecuteCallPrn(Memory* mem, int base_reg) {
+string Instruction::ExecuteCallPrn(Memory* mem, int base_reg, int limit_reg) {
+
+	if (GetFirstOp() + base_reg > limit_reg) {
+		cout << "Segmentation error occured when executing instruction" 
+		<< endl << "\t\t" << instruction_ << endl << endl;
+		throw exception();
+	}
 
 	int first_content = mem->GetValue(GetFirstOp() + base_reg);
 	cout << first_content << endl;
@@ -264,7 +324,7 @@ string Instruction::ExecuteCallPrn(Memory* mem, int base_reg) {
 }
 
 // CALL EXEC A -> Loads the program specified in the file name
-string Instruction::ExecuteCallExec(Memory* mem, int base_reg) {
+string Instruction::ExecuteCallExec(Memory* mem, int base_reg, int limit_reg) {
 	
 	int 	address = GetFirstOp() + base_reg,
 			first_content;

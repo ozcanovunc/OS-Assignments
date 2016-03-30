@@ -6,6 +6,7 @@ Process::Process(string file_name, Memory* mem, int starting_time, int ppid) {
 	ifstream file(file_name.c_str());
     string line;
     Instruction* instr;
+    int former_mem_size = mem->GetSize();
 
     while (getline(file, line))
     {
@@ -21,7 +22,7 @@ Process::Process(string file_name, Memory* mem, int starting_time, int ppid) {
     	}
     }
 
-    mem->AllocMemoryForNewProcess(file_name, base_reg_, limit_reg_);
+    mem->AllocMemoryForNewProcess(file_name);
 
     name_ = file_name;
     pid_ = WaitRandomBetween(1000, 5000);
@@ -29,12 +30,14 @@ Process::Process(string file_name, Memory* mem, int starting_time, int ppid) {
     starting_time_ = starting_time;
     execution_time_ = 0;
 
+    // Setting up base and limit registers
+    base_reg_ = former_mem_size;
+    limit_reg_ = mem->GetSize() - 1;  
+    mem->SetValue(2 + base_reg_, base_reg_);
+    mem->SetValue(3 + base_reg_, limit_reg_);
+
     // Process is initially in ready state
     state_ = READY;
-}
-
-int Process::GetPc(Memory* mem) {
-    return mem->GetValue(base_reg_);
 }
 
 int Process::GetPid() {
@@ -47,6 +50,10 @@ string Process::GetName() {
 
 ProcessState Process::GetState() {
 	return state_;
+}
+
+int Process::GetPc(Memory* mem) {
+    return mem->GetValue(base_reg_);
 }
 
 int Process::GetBaseReg() {
@@ -65,6 +72,10 @@ void Process::SetState(ProcessState state) {
 	state_ = state;
 }
 
+void Process::SetPc(Memory* mem, int pc) {
+    mem->SetValue(base_reg_, pc);
+}
+
 void Process::SetBaseReg(int base_reg) {
     base_reg_ = base_reg;
 }
@@ -78,7 +89,14 @@ void Process::SetExecutionTime(int exe_time) {
 }
 
 string Process::ExecuteCurrentInstruction(Memory* mem) {
-	return instruction_set_.at(GetPc(mem)).Execute(mem, base_reg_);
+	return instruction_set_.at(GetPc(mem)).Execute(mem, base_reg_, limit_reg_);
+}
+
+Process* Process::Fork(Memory* mem, int starting_time) {
+
+    Process* new_process = new Process(name_, mem, starting_time, pid_);
+    new_process->SetPc(mem, GetPc(mem));
+    return new_process;
 }
 
 ostream& operator<<(ostream& os, const Process& process) {

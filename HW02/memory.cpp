@@ -1,11 +1,10 @@
 #include "helper.h"
 #include "memory.h"
 
-void Memory::AllocMemoryForNewProcess(string file_name, int& base, int& limit) {
+void Memory::AllocMemoryForNewProcess(string file_name) {
 
     ifstream file(file_name.c_str());
     string line, content;
-    int mem_address = -1;
     int value;
 
     while (getline(file, line))
@@ -15,7 +14,6 @@ void Memory::AllocMemoryForNewProcess(string file_name, int& base, int& limit) {
     	    while (getline(file, line) && 
     	    	line.find("End Data Section") == string::npos) {
 
-    	    	++mem_address;
                 content = GetNthWordFromString(line, ' ', 2);
 
                 // Decide whether content denotes a character or not
@@ -26,15 +24,7 @@ void Memory::AllocMemoryForNewProcess(string file_name, int& base, int& limit) {
                     value = atoi(content.c_str());
                 }
 
-    	    	mem_content_.push_back(value);
-
-    	    	// Set base and limit registers
-    	    	if (mem_address == 2) {
-    	    		base = value;
-    	    	}
-    	    	else if (mem_address == 3) {
-    	    		limit = value;	
-    	    	}   	    	
+    	    	mem_content_.push_back(value);  	
     	    }
     	}
     }
@@ -47,6 +37,10 @@ int Memory::GetValue(int addr) {
 		exit(EXIT_FAILURE);
 	}
 	return mem_content_.at(addr);
+}
+
+int Memory::GetSize() {
+    return mem_content_.size();
 }
 
 void Memory::SetValue(int addr, int val) {
