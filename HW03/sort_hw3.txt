@@ -20,7 +20,7 @@ Begin Data Section
 18 0
 19 0
 20 0       # Memory location  21 contains number N.  24 contains start index of the numbers to be sorted
-21 2000     # N=2000            number N is given at memory index=21  
+21 1000     # N=2000            number N is given at memory index=21  
 22 0     
 23 0      
 24 60      #numbers to be sorted starts at index 60
@@ -2061,9 +2061,40 @@ Begin Data Section
 2059 1389
 End Data Section
 Begin Instruction Section
-#Write your sort program here
-#sort numbers  between memory locations 60 and 159
-
-#copy and paste the sorting program you wrote at hw1 here
-
+0 CPY 21 30					# num of integers
+1 CPY 21 31					# num of integers
+2 CPY 24 32					# save starting address
+3 CPY 24 33					# save starting address
+4 CPY 30 34					# counter for outer loop
+5 SET 0 35					# i = 0
+6 CPY 24 42 				# j = 0 
+7 SET 1 39
+8 ADDI 35 39
+9 SUBI 31 39
+10 CPY 39 40
+11 SET 1 43
+12 ADDI 42 43 				# j + 1
+13 CPYI 42 44 				# M[j]
+14 CPYI 43 45 				# M[j + 1]
+15 CPY 44 46 				# M[j]
+16 CPY 45 47 				# M[j + 1]
+17 SUBI 47 46
+18 JIF 46 21
+19 CPYI2 44 43 				# M[j + 1] <- M[j]
+20 CPYI2 45 42 				# M[j] <- M[j + 1]
+21 ADD 1 42 				# j += 1
+22 SET 1 41 				# var for decr
+23 SUBI 40 41 				# decrement inner counter
+24 CPY 41 40 				# save updated counter
+25 JIF 41 28 				# exit inner loop
+26 SET 0 41
+27 JIF 41 11 				# else continue with next iteration
+28 ADD 1 35					# i += 1
+29 SET 1 36					# var for decr
+30 SUBI 34 36				# update counter for outer loop
+31 CPY 36 34				# save updated counter
+32 JIF 36 35				# exit outer loop
+33 SET 0 37
+34 JIF 37 6 				# else continue with next iteration
+35 HLT
 End Instruction Section

@@ -19,7 +19,7 @@ Simulator::Simulator(string file_name, int debug_mode) {
     	}
     }	
 
-    memory_ = new Memory(file_name);
+    memory_ = new Memory(file_name, debug_mode);
 	debug_mode_ = debug_mode;
 }
 
@@ -53,7 +53,8 @@ void Simulator::RunSimulator() {
         if ((debug_mode_ == 1 || debug_mode_ == 2) 
 			&& program_counter < instruction_set_.size()) {
         	// Print the contents of the memory in debug mode
-    		cout << *memory_;
+    		cout << endl << *memory_;
+            memory_->PrintPageTable();
         }
 
         if (debug_mode_ == 2 && program_counter < instruction_set_.size()) {

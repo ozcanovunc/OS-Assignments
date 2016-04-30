@@ -6,7 +6,6 @@
 
 int main(int argc, char** argv) {
 	
-#if 0
 	if (argc != 4) {
 		cerr << "Usage: ./Simulate [PROGRAM] -D [MODE]" << endl;
 		cerr << "Example: ./Simulate pr.txt -D 0" << endl;
@@ -17,6 +16,4 @@ int main(int argc, char** argv) {
 	sim->RunSimulator();
 	delete sim;
 	return EXIT_SUCCESS;
-#endif
-
 }
