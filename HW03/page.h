@@ -14,10 +14,6 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Page& page);
 
 private:	
-	// Could be 0 or 1
-	int modified_bit_;
-	int referenced_bit_;
-	int present_bit_;
 	int frame_number_;
 
 	std::vector<int> mem_content_;

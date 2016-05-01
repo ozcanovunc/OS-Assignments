@@ -26,11 +26,7 @@ Page::Page(string file_name, int frame_number) {
     	}
     }
 
-    // TODO: Update this!!!
     frame_number_ = frame_number;
-    modified_bit_ = 0;
-    referenced_bit_ = 0;
-    present_bit_ = 0;
 }
 
 int Page::GetValue(int addr) {
